@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>小红书笔记 AI 智能改写工作流 | 项目展示</title>
+<style>
+  :root {
+    --bg: #0b0e14;
+    --bg-soft: #12161f;
+    --card: #161b26;
+    --border: #232a38;
+    --text: #e8ecf3;
+    --text-dim: #9aa5b5;
+    --accent: #ff4d6a;
+    --accent2: #5b8cff;
+    --accent3: #22c8a3;
+    --grad: linear-gradient(135deg, #ff4d6a 0%, #ff8f5b 50%, #ffc046 100%);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+
+  /* ---------- Hero ---------- */
+  header {
+    position: relative;
+    padding: 110px 0 90px;
+    text-align: center;
+    background:
+      radial-gradient(ellipse 60% 50% at 50% -10%, rgba(255,77,106,.16), transparent),
+      radial-gradient(ellipse 50% 40% at 80% 10%, rgba(91,140,255,.12), transparent);
+    border-bottom: 1px solid var(--border);
+  }
+  .badge {
+    display: inline-block;
+    padding: 6px 16px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: 13px;
+    color: var(--text-dim);
+    background: rgba(255,255,255,.03);
+    margin-bottom: 28px;
+  }
+  .badge b { color: var(--accent); font-weight: 600; }
+  h1 {
+    font-size: 46px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    background: var(--grad);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 20px;
+  }
+  .hero-sub {
+    color: var(--text-dim);
+    font-size: 17px;
+    max-width: 640px;
+    margin: 0 auto 44px;
+  }
+  .stats { display: flex; justify-content: center; gap: 18px; flex-wrap: wrap; }
+  .stat {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 28px;
+    min-width: 150px;
+  }
+  .stat .num {
+    font-size: 26px;
+    font-weight: 800;
+    background: var(--grad);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .stat .lbl { font-size: 12.5px; color: var(--text-dim); margin-top: 2px; }
+
+  /* ---------- Sections ---------- */
+  section { padding: 72px 0; }
+  .sec-title { text-align: center; margin-bottom: 12px; font-size: 30px; font-weight: 800; }
+  .sec-desc { text-align: center; color: var(--text-dim); font-size: 15px; margin-bottom: 44px; }
+
+  /* ---------- Pipeline ---------- */
+  .pipeline-card {
+    background: var(--bg-soft);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 36px 20px;
+    overflow-x: auto;
+  }
+  .pipeline-card svg { min-width: 860px; width: 100%; height: auto; display: block; }
+
+  /* ---------- Demo compare ---------- */
+  .demo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; margin-bottom: 26px; }
+  .demo-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+  }
+  .demo-card img { width: 100%; display: block; aspect-ratio: 4/3.4; object-fit: cover; }
+  .demo-cap { padding: 14px 18px; font-size: 14px; color: var(--text-dim); }
+  .demo-cap b { color: var(--text); font-size: 15px; }
+  .tag-before, .tag-after {
+    display: inline-block; font-size: 12px; padding: 2px 10px;
+    border-radius: 999px; margin-bottom: 6px; font-weight: 600;
+  }
+  .tag-before { background: rgba(154,165,181,.15); color: var(--text-dim); }
+  .tag-after { background: rgba(34,200,163,.15); color: var(--accent3); }
+
+  /* ---------- Highlights ---------- */
+  .hl-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+  .hl {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 26px;
+    transition: transform .2s, border-color .2s;
+  }
+  .hl:hover { transform: translateY(-4px); border-color: rgba(255,77,106,.5); }
+  .hl .icon { font-size: 28px; margin-bottom: 12px; }
+  .hl h3 { font-size: 17px; margin-bottom: 8px; }
+  .hl p { font-size: 14px; color: var(--text-dim); }
+
+  /* ---------- Stack ---------- */
+  .stack { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+  .chip {
+    padding: 8px 18px;
+    border-radius: 999px;
+    font-size: 13.5px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--text-dim);
+  }
+  .chip b { color: var(--text); font-weight: 600; }
+
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 36px 0;
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 13.5px;
+  }
+  footer a { color: var(--accent2); text-decoration: none; }
+
+  @media (max-width: 640px) {
+    h1 { font-size: 32px; }
+    .demo-grid { grid-template-columns: 1fr; }
+    section { padding: 52px 0; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="badge">个人独立项目 · <b>Dify 工作流 + 多模型编排</b></div>
+    <h1>小红书笔记 AI 智能改写工作流</h1>
+    <p class="hero-sub">
+      给一条小红书笔记链接，自动完成「笔记抓取 → 文案改写 → 封面图智能生成」全链路。
+      支持登录墙对抗、本地视觉模型识图、云端 Seedream 图生图，端到端一键出稿。
+    </p>
+    <div class="stats">
+      <div class="stat"><div class="num">5 段</div><div class="lbl">工作流编排节点</div></div>
+      <div class="stat"><div class="num">3 模型</div><div class="lbl">DeepSeek + Seedream + minicpm-v</div></div>
+      <div class="stat"><div class="num">3 通道</div><div class="lbl">图生图多级容错</div></div>
+      <div class="stat"><div class="num">100%</div><div class="lbl">本地 Docker 自建部署</div></div>
+    </div>
+  </div>
+</header>
+
+<!-- ===== 工作流架构 ===== -->
+<section id="pipeline">
+  <div class="wrap">
+    <h2 class="sec-title">工作流架构</h2>
+    <p class="sec-desc">基于 Dify 1.14 自建实例编排，父子工作流嵌套，云端与本地模型混合调度</p>
+    <div class="pipeline-card">
+      <svg viewBox="0 0 960 300" xmlns="http://www.w3.org/2000/svg" font-family="PingFang SC, Microsoft YaHei, sans-serif">
+        <defs>
+          <marker id="arr" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+            <path d="M0,0 L8,4 L0,8 Z" fill="#5b8cff"/>
+          </marker>
+        </defs>
+        <!-- 输入 -->
+        <rect x="10" y="110" width="120" height="80" rx="12" fill="#161b26" stroke="#232a38" stroke-width="1.5"/>
+        <text x="70" y="145" text-anchor="middle" fill="#e8ecf3" font-size="15" font-weight="700">笔记链接</text>
+        <text x="70" y="168" text-anchor="middle" fill="#9aa5b5" font-size="11.5">用户输入 URL</text>
+        <!-- 抓取 -->
+        <rect x="170" y="90" width="160" height="120" rx="12" fill="#161b26" stroke="#ff4d6a" stroke-width="1.8"/>
+        <text x="250" y="122" text-anchor="middle" fill="#ff4d6a" font-size="15" font-weight="700">① 智能抓取</text>
+        <text x="250" y="146" text-anchor="middle" fill="#9aa5b5" font-size="11.5">移动端 UA + Cookie</text>
+        <text x="250" y="164" text-anchor="middle" fill="#9aa5b5" font-size="11.5">登录墙自愈重试</text>
+        <text x="250" y="182" text-anchor="middle" fill="#9aa5b5" font-size="11.5">SPA 内嵌 JSON 解析</text>
+        <!-- 文案 -->
+        <rect x="370" y="90" width="160" height="120" rx="12" fill="#161b26" stroke="#5b8cff" stroke-width="1.8"/>
+        <text x="450" y="122" text-anchor="middle" fill="#5b8cff" font-size="15" font-weight="700">② 文案改写</text>
+        <text x="450" y="146" text-anchor="middle" fill="#9aa5b5" font-size="11.5">DeepSeek V4 Pro</text>
+        <text x="450" y="164" text-anchor="middle" fill="#9aa5b5" font-size="11.5">标题 + 正文 + 标签</text>
+        <text x="450" y="182" text-anchor="middle" fill="#9aa5b5" font-size="11.5">思考链自动剥离</text>
+        <!-- 图片 -->
+        <rect x="570" y="90" width="170" height="120" rx="12" fill="#161b26" stroke="#ffc046" stroke-width="1.8"/>
+        <text x="655" y="118" text-anchor="middle" fill="#ffc046" font-size="15" font-weight="700">③ 封面图生成</text>
+        <text x="655" y="140" text-anchor="middle" fill="#9aa5b5" font-size="11.5">minicpm-v 本地识图</text>
+        <text x="655" y="158" text-anchor="middle" fill="#9aa5b5" font-size="11.5">Seedream 5.0 图生图</text>
+        <text x="655" y="176" text-anchor="middle" fill="#9aa5b5" font-size="11.5">Base64 → 远端拉取 → 兜底</text>
+        <text x="655" y="194" text-anchor="middle" fill="#9aa5b5" font-size="11.5">保真规则 + 水印移除</text>
+        <!-- 输出 -->
+        <rect x="790" y="110" width="150" height="80" rx="12" fill="#161b26" stroke="#22c8a3" stroke-width="1.8"/>
+        <text x="865" y="145" text-anchor="middle" fill="#22c8a3" font-size="15" font-weight="700">④ 一键出稿</text>
+        <text x="865" y="168" text-anchor="middle" fill="#9aa5b5" font-size="11.5">改写文案 + 新配图</text>
+        <!-- 箭头 -->
+        <line x1="130" y1="150" x2="168" y2="150" stroke="#5b8cff" stroke-width="1.8" marker-end="url(#arr)"/>
+        <line x1="330" y1="150" x2="368" y2="150" stroke="#5b8cff" stroke-width="1.8" marker-end="url(#arr)"/>
+        <line x1="530" y1="150" x2="568" y2="150" stroke="#5b8cff" stroke-width="1.8" marker-end="url(#arr)"/>
+        <line x1="740" y1="150" x2="788" y2="150" stroke="#5b8cff" stroke-width="1.8" marker-end="url(#arr)"/>
+        <!-- 底部注释 -->
+        <text x="480" y="262" text-anchor="middle" fill="#59637a" font-size="12">
+          部署环境：Docker 自建 Dify · PostgreSQL 工作流底层调优 · Ollama + RTX 4060 本地视觉推理 · 火山方舟云端生图
+        </text>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 效果演示 ===== -->
+<section id="demo" style="background: var(--bg-soft); border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
+  <div class="wrap">
+    <h2 class="sec-title">效果演示</h2>
+    <p class="sec-desc">真实笔记图片实测：构图与文字严格保真，仅做质感精修与水印净化</p>
+
+    <div class="demo-grid">
+      <div class="demo-card">
+        <img src="assets/before.jpg" alt="原图">
+        <div class="demo-cap"><span class="tag-before">原笔记图</span><br>含平台水印、画质平淡</div>
+      </div>
+      <div class="demo-card">
+        <img src="assets/after.jpg" alt="生成图">
+        <div class="demo-cap"><span class="tag-after">AI 生成</span><br><b>水印自动移除</b>，光影氛围重铸为暖金色调，构图与文字一字未动</div>
+      </div>
+    </div>
+
+    <div class="demo-grid">
+      <div class="demo-card">
+        <img src="assets/demo2_before.jpg" alt="原图二">
+        <div class="demo-cap"><span class="tag-before">原笔记图</span><br>照片 + 手绘插画对比图</div>
+      </div>
+      <div class="demo-card">
+        <img src="assets/demo2_after.jpg" alt="生成图二">
+        <div class="demo-cap"><span class="tag-after">AI 生成</span><br><b>同一构图同一内容</b>，细节纹理与光影明显更精致 —— "高级精修版"效果</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 技术亮点 ===== -->
+<section id="highlights">
+  <div class="wrap">
+    <h2 class="sec-title">技术亮点</h2>
+    <p class="sec-desc">从反爬对抗到提示词工程，每一环都是踩坑踩出来的工程方案</p>
+    <div class="hl-grid">
+      <div class="hl">
+        <div class="icon">🛡️</div>
+        <h3>登录墙对抗与自愈</h3>
+        <p>针对小红书反爬升级：移动端 UA 轮换 + Cookie 登录态注入 + 登录墙特征检测自动重试，破解数据中心出口 IP 风控。</p>
+      </div>
+      <div class="hl">
+        <div class="icon">🧩</div>
+        <h3>SPA 内嵌数据解析</h3>
+        <p>页面全面 SPA 化后 og 标签失效，改为括号配对精确截取 __INITIAL_STATE__ JSON，清洗 undefined 等非法标记，兼容新旧双版页面结构。</p>
+      </div>
+      <div class="hl">
+        <div class="icon">🔀</div>
+        <h3>图生图多通道容错</h3>
+        <p>本地下载转 Base64 直喂模型 → Ark 服务端远端拉取 → 文生图兜底，三级通道保证 CDN 限流时依然稳定出图，杜绝"静默降级"。</p>
+      </div>
+      <div class="hl">
+        <div class="icon">🎛️</div>
+        <h3>保真档位提示词工程</h3>
+        <p>输出图与原图逐像素比对调校：主体/构图/文字硬性锁定，光影质感定向演绎，平台水印唯一例外移除——在"复刻"与"乱画"之间精准拨档。</p>
+      </div>
+      <div class="hl">
+        <div class="icon">🖥️</div>
+        <h3>本地 + 云端混合编排</h3>
+        <p>Ollama 部署 minicpm-v 于 RTX 4060 本地跑视觉描述（零 token 成本），云端 Seedream 5.0 负责高质量生图，成本与效果兼得。</p>
+      </div>
+      <div class="hl">
+        <div class="icon">🔧</div>
+        <h3>Dify 底层工程化改造</h3>
+        <p>不止于画布配置：直改 PostgreSQL 工作流图、容器缓存管理、运行链路逆向排查、think 推理链自动清洗节点注入。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 技术栈 ===== -->
+<section id="stack" style="padding-top: 0;">
+  <div class="wrap">
+    <h2 class="sec-title" style="font-size:24px;">技术栈</h2>
+    <div class="stack" style="margin-top:30px;">
+      <div class="chip"><b>Dify 1.14</b> 工作流引擎</div>
+      <div class="chip"><b>DeepSeek V4</b> 文案改写</div>
+      <div class="chip"><b>Seedream 5.0</b> 图像生成</div>
+      <div class="chip"><b>minicpm-v</b> 本地视觉</div>
+      <div class="chip"><b>Ollama</b> + RTX 4060</div>
+      <div class="chip"><b>Docker</b> 自建部署</div>
+      <div class="chip"><b>PostgreSQL</b> 底层调优</div>
+      <div class="chip"><b>Python</b> 节点开发</div>
+      <div class="chip"><b>火山方舟</b> Ark API</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    小红书笔记 AI 智能改写工作流 · 个人独立项目展示<br><br>
+    <a href="https://github.com/zx997842-ship-it" target="_blank">GitHub @zx997842-ship-it</a>
+  </div>
+</footer>
+
+</body>
+</html>
